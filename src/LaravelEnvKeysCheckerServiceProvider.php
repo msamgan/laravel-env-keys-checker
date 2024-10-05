@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Msamgan\LaravelEnvKeysChecker;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use Msamgan\LaravelEnvKeysChecker\Commands\LaravelEnvKeysCheckerCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('laravel-env-keys-checker')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_laravel_env_keys_checker_table')
+            ->hasCommand(LaravelEnvKeysCheckerCommand::class);
     }
 }
