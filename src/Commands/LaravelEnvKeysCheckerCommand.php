@@ -10,7 +10,7 @@ use function Laravel\Prompts\table;
 
 class LaravelEnvKeysCheckerCommand extends Command
 {
-    public $signature = 'env:keys-check';
+    public $signature = 'env:keys-check {--auto-add=}';
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
@@ -19,7 +19,16 @@ class LaravelEnvKeysCheckerCommand extends Command
         $envFiles = glob(base_path('.env*'));
 
         $ignoredFiles = config('env-keys-checker.ignore_files', []);
-        $autoAddStrategy = config('env-keys-checker.auto_add', 'ask');
+        $autoAddOption = $this->option('auto-add');
+        $autoAddAvailableOptions = ['ask', 'auto', 'none'];
+
+        $autoAddStrategy = $autoAddOption ?: config('env-keys-checker.auto_add', 'ask');
+
+        if (! in_array($autoAddStrategy, $autoAddAvailableOptions)) {
+            $this->error('!! Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions));
+
+            return self::FAILURE;
+        }
 
         if (empty($envFiles)) {
             $this->error('!! No .env files found.');
@@ -65,23 +74,7 @@ class LaravelEnvKeysCheckerCommand extends Command
             return self::SUCCESS;
         }
 
-        if ($autoAddStrategy === 'none') {
-            return self::SUCCESS;
-        }
-
         return self::FAILURE;
-    }
-
-    private function addKeysToFile($missingKeys, array $envFiles): void
-    {
-        $missingKeys->each(function ($missingKey) {
-            $filePath = base_path($missingKey['envFile']);
-            $envContent = file($filePath);
-            array_splice($envContent, $missingKey['line'] - 1, 0, $missingKey['key'].'=""'.PHP_EOL);
-            file_put_contents($filePath, $envContent);
-        });
-
-        $this->info('=> Missing keys added to all .env files.');
     }
 
     private function getAllKeys($files): Collection
@@ -132,5 +125,17 @@ class LaravelEnvKeysCheckerCommand extends Command
                 ]);
             }
         });
+    }
+
+    private function addKeysToFile($missingKeys, array $envFiles): void
+    {
+        $missingKeys->each(function ($missingKey) {
+            $filePath = base_path($missingKey['envFile']);
+            $envContent = file($filePath);
+            array_splice($envContent, $missingKey['line'] - 1, 0, $missingKey['key'] . '=""' . PHP_EOL);
+            file_put_contents($filePath, $envContent);
+        });
+
+        $this->info('=> Missing keys added to all .env files.');
     }
 }

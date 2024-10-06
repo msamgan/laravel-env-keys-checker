@@ -42,7 +42,7 @@ Add the following code to your test case.
 
 ```php
 it('tests that the .env key are same across all .env files.', function () {
-    $this->artisan('env:keys-check')->assertExitCode(0);
+    $this->artisan('env:keys-check --auto-add=none')->assertExitCode(0);
 });
 ```
 
@@ -62,6 +62,15 @@ You can configure the package by publishing the configuration file.
 # List of all the .env keys to ignore while checking the env keys
 
 'ignore_keys' => [],
+```
+
+```php
+# config/env-keys-checker.php  
+# strategy to add the missing keys to the .env file
+# ask: will ask the user to add the missing keys
+# auto: will add the missing keys automatically
+# none: will not add the missing keys
+'auto_add' => 'ask',
 ```
 
 ## Testing
