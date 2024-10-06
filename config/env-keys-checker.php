@@ -11,5 +11,5 @@ return [
     // ask: will ask the user to add the missing keys
     // auto: will add the missing keys automatically
     // none: will not add the missing keys
-    'auto_add' => 'ask'
+    'auto_add' => 'ask',
 ];

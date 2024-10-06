@@ -5,6 +5,7 @@ namespace Msamgan\LaravelEnvKeysChecker\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\table;
 
 class LaravelEnvKeysCheckerCommand extends Command
@@ -18,6 +19,7 @@ class LaravelEnvKeysCheckerCommand extends Command
         $envFiles = glob(base_path('.env*'));
 
         $ignoredFiles = config('env-keys-checker.ignore_files', []);
+        $autoAddStrategy = config('env-keys-checker.auto_add', 'ask');
 
         if (empty($envFiles)) {
             $this->error('!! No .env files found.');
@@ -47,7 +49,39 @@ class LaravelEnvKeysCheckerCommand extends Command
             rows: $missingKeys,
         );
 
+        if ($autoAddStrategy === 'ask') {
+            $confirmation = confirm('Do you want to add the missing keys to the .env files?');
+
+            if ($confirmation) {
+                $this->addKeysToFile($missingKeys, $envFiles);
+            }
+
+            return self::SUCCESS;
+        }
+
+        if ($autoAddStrategy === 'auto') {
+            $this->addKeysToFile($missingKeys, $envFiles);
+
+            return self::SUCCESS;
+        }
+
+        if ($autoAddStrategy === 'none') {
+            return self::SUCCESS;
+        }
+
         return self::FAILURE;
+    }
+
+    private function addKeysToFile($missingKeys, array $envFiles): void
+    {
+        $missingKeys->each(function ($missingKey) {
+            $filePath = base_path($missingKey['envFile']);
+            $envContent = file($filePath);
+            array_splice($envContent, $missingKey['line'] - 1, 0, $missingKey['key'].'=""'.PHP_EOL);
+            file_put_contents($filePath, $envContent);
+        });
+
+        $this->info('=> Missing keys added to all .env files.');
     }
 
     private function getAllKeys($files): Collection
