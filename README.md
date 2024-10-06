@@ -26,7 +26,7 @@ composer require msamgan/laravel-env-keys-checker
 You must publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-env-keys-checker-config"
+php artisan vendor:publish --tag="env-keys-checker-config"
 ```
 
 ## Usage
