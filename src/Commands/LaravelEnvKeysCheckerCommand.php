@@ -53,11 +53,13 @@ class LaravelEnvKeysCheckerCommand extends Command
         $keyArray = $files
             ->map(function ($file) {
                 $lines = file($file);
+
                 return collect($lines)->map(function ($line, $index) {
                     $key = explode('=', $line)[0];
+
                     return [
                         'key' => $key,
-                        'line' => $index + 1
+                        'line' => $index + 1,
                     ];
                 })->filter(function ($item) {
                     return $item['key'] !== "\n" && ! str_starts_with($item['key'], '#');
