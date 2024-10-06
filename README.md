@@ -1,5 +1,8 @@
 # check if all the keys are available across all the .env files.
 
+![image](https://github.com/user-attachments/assets/b92bdf13-d3ce-4002-a6bd-4b3a0891cabf)
+
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/msamgan/laravel-env-keys-checker.svg?style=flat-square)](https://packagist.org/packages/msamgan/laravel-env-keys-checker)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/msamgan/laravel-env-keys-checker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/msamgan/laravel-env-keys-checker/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/msamgan/laravel-env-keys-checker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/msamgan/laravel-env-keys-checker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
