@@ -17,11 +17,17 @@ class LaravelEnvKeysCheckerCommand extends Command
     {
         $envFiles = glob(base_path('.env*'));
 
+        $ignoredFiles = config('env-keys-checker.ignore_files', []);
+
         if (empty($envFiles)) {
             $this->error('!! No .env files found.');
 
             return self::FAILURE;
         }
+
+        $envFiles = collect($envFiles)->filter(function ($file) use ($ignoredFiles) {
+            return ! in_array(basename($file), $ignoredFiles);
+        })->toArray();
 
         $keys = $this->getAllKeys($envFiles);
 
@@ -46,16 +52,16 @@ class LaravelEnvKeysCheckerCommand extends Command
 
     private function getAllKeys($files): Collection
     {
+        $ignoredKeys = config('env-keys-checker.ignore_keys', []);
+
         $files = is_array($files)
             ? collect($files)
             : collect([$files]);
 
-        $keyArray = $files
-            ->map(function ($file) {
-                $lines = file($file);
-
-                return collect($lines)->map(function ($line, $index) {
-                    $key = explode('=', $line)[0];
+        return $files
+            ->map(function ($file) use ($ignoredKeys) {
+                return collect(file($file))->map(function ($line, $index) {
+                    [$key] = explode('=', $line);
 
                     return [
                         'key' => $key,
@@ -63,12 +69,12 @@ class LaravelEnvKeysCheckerCommand extends Command
                     ];
                 })->filter(function ($item) {
                     return $item['key'] !== "\n" && ! str_starts_with($item['key'], '#');
+                })->filter(function ($keyData) use ($ignoredKeys) {
+                    return ! in_array($keyData['key'], $ignoredKeys);
                 });
             })
             ->flatten(1)
             ->unique('key');
-
-        return $keyArray;
     }
 
     private function checkForKeyInFile($keyData, $envFiles, $missingKeys): void
@@ -85,11 +91,10 @@ class LaravelEnvKeysCheckerCommand extends Command
             }
 
             if (! $keyExists) {
-                $fileParts = explode(DIRECTORY_SEPARATOR, $envFile);
                 $missingKeys->push([
                     'line' => $keyData['line'],
                     'key' => $keyData['key'],
-                    'envFile' => end($fileParts),
+                    'envFile' => basename($envFile),
                 ]);
             }
         });
