@@ -2,9 +2,9 @@
 
 namespace Msamgan\LaravelEnvKeysChecker;
 
+use Msamgan\LaravelEnvKeysChecker\Commands\LaravelEnvKeysCheckerCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Msamgan\LaravelEnvKeysChecker\Commands\LaravelEnvKeysCheckerCommand;
 
 class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
 {

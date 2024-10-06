@@ -3,8 +3,8 @@
 namespace Msamgan\LaravelEnvKeysChecker\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Msamgan\LaravelEnvKeysChecker\LaravelEnvKeysCheckerServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
