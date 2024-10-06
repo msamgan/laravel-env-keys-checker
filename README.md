@@ -1,6 +1,6 @@
-# check if all the keys are available across all the .env files.
+# Check if all the keys are available across all the .env files.
 
-![image](https://github.com/user-attachments/assets/b92bdf13-d3ce-4002-a6bd-4b3a0891cabf)
+![image](https://github.com/user-attachments/assets/ad617e05-5d45-4b2c-a6b9-5cd095719fa3)
 
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/msamgan/laravel-env-keys-checker.svg?style=flat-square)](https://packagist.org/packages/msamgan/laravel-env-keys-checker)
