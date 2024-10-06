@@ -26,8 +26,8 @@ class LaravelEnvKeysCheckerCommand extends Command
         $keys = $this->getAllKeys($envFiles);
 
         $missingKeys = collect();
-        $keys->each(function ($key) use ($envFiles, $missingKeys) {
-            $this->checkForKeyInFile($key, $envFiles, $missingKeys);
+        $keys->each(function ($keyData) use ($envFiles, $missingKeys) {
+            $this->checkForKeyInFile($keyData, $envFiles, $missingKeys);
         });
 
         if ($missingKeys->isEmpty()) {
@@ -37,7 +37,7 @@ class LaravelEnvKeysCheckerCommand extends Command
         }
 
         table(
-            headers: ['Key', 'Is missing in'],
+            headers: ['Line', 'Key', 'Is missing in'],
             rows: $missingKeys,
         );
 
@@ -51,24 +51,42 @@ class LaravelEnvKeysCheckerCommand extends Command
             : collect([$files]);
 
         $keyArray = $files
-            ->map(fn ($file) => file($file))
-            ->map(fn ($lines) => collect($lines))
-            ->map(fn ($lines) => $lines->map(fn ($line) => explode('=', $line)[0]))
-            ->map(fn ($keys) => $keys->filter(fn ($key) => $key !== "\n"))
-            ->map(fn ($keys) => $keys->filter(fn ($key) => ! str_starts_with($key, '#')));
+            ->map(function ($file) {
+                $lines = file($file);
+                return collect($lines)->map(function ($line, $index) {
+                    $key = explode('=', $line)[0];
+                    return [
+                        'key' => $key,
+                        'line' => $index + 1
+                    ];
+                })->filter(function ($item) {
+                    return $item['key'] !== "\n" && ! str_starts_with($item['key'], '#');
+                });
+            })
+            ->flatten(1)
+            ->unique('key');
 
-        return $keyArray->flatten()->unique();
+        return $keyArray;
     }
 
-    private function checkForKeyInFile($key, $envFiles, $missingKeys): void
+    private function checkForKeyInFile($keyData, $envFiles, $missingKeys): void
     {
-        collect($envFiles)->each(function ($envFile) use ($key, $missingKeys) {
+        collect($envFiles)->each(function ($envFile) use ($keyData, $missingKeys) {
             $envContent = file($envFile);
-            $keyExists = collect($envContent)->contains(fn ($line) => str_starts_with($line, $key));
+            $keyExists = false;
+
+            foreach ($envContent as $line) {
+                if (str_starts_with($line, $keyData['key'])) {
+                    $keyExists = true;
+                    break;
+                }
+            }
+
             if (! $keyExists) {
                 $fileParts = explode(DIRECTORY_SEPARATOR, $envFile);
                 $missingKeys->push([
-                    'key' => $key,
+                    'line' => $keyData['line'],
+                    'key' => $keyData['key'],
                     'envFile' => end($fileParts),
                 ]);
             }
