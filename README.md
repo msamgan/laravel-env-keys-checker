@@ -26,6 +26,17 @@ composer require msamgan/laravel-env-keys-checker
 php artisan env:keys-check
 ```
 
+## In Test
+
+You can also use this package in your test cases to make sure that all the keys are available across all the .env files.
+Add the following code to your test case.
+
+```php
+it('tests that the .env key are same across all .env files.', function () {
+    $this->artisan('env:keys-check')->assertExitCode(0);
+});
+```
+
 ## Testing
 
 ```bash
