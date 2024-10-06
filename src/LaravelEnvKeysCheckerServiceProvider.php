@@ -18,8 +18,6 @@ class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-env-keys-checker')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel_env_keys_checker_table')
             ->hasCommand(LaravelEnvKeysCheckerCommand::class);
     }
 }
