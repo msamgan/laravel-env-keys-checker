@@ -23,7 +23,7 @@ You can install the package via composer:
 composer require msamgan/laravel-env-keys-checker
 ```
 
-You must publish the config file with:
+You can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="env-keys-checker-config"
