@@ -23,7 +23,7 @@ You can install the package via composer:
 composer require msamgan/laravel-env-keys-checker
 ```
 
-You can publish the config file with:
+You must publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="laravel-env-keys-checker-config"
@@ -44,6 +44,24 @@ Add the following code to your test case.
 it('tests that the .env key are same across all .env files.', function () {
     $this->artisan('env:keys-check')->assertExitCode(0);
 });
+```
+
+## Configuration
+
+You can configure the package by publishing the configuration file.
+
+```php
+# config/env-keys-checker.php
+# List of all the .env files to ignore while checking the env keys
+ 
+'ignore_files' => [],
+```
+
+```php
+# config/env-keys-checker.php
+# List of all the .env keys to ignore while checking the env keys
+
+'ignore_keys' => [],
 ```
 
 ## Testing
