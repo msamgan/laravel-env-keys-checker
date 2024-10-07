@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.3.0 - 2024-10-07
+
+### What's Changed
+
+* Space line preservation by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/4
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.2.0...v1.3.0
+
 ## v1.2.0 - 2024-10-06
 
 ### What's Changed
