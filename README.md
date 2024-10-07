@@ -24,7 +24,7 @@ to the .env.example file or the other way around.
 You can install the package via composer:
 
 ```bash
-composer require msamgan/laravel-env-keys-checker
+composer require msamgan/laravel-env-keys-checker --dev
 ```
 
 You can publish the config file with (recommended):
