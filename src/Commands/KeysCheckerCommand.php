@@ -11,7 +11,7 @@ use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
 
-class LaravelEnvKeysCheckerCommand extends Command
+class KeysCheckerCommand extends Command
 {
     public $signature = 'env:keys-check {--auto-add=}';
 

@@ -12,4 +12,8 @@ return [
     // auto: will add the missing keys automatically
     // none: will not add the missing keys
     'auto_add' => 'ask',
+
+    // List of all the .env.* files to be checked if they
+    // are present in the .gitignore file
+    'gitignore_files' => ['.env'],
 ];
