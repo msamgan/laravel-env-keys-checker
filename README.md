@@ -70,6 +70,7 @@ You can configure the package by publishing the configuration file.
 # ask: will ask the user to add the missing keys
 # auto: will add the missing keys automatically
 # none: will not add the missing keys
+
 'auto_add' => 'ask',
 ```
 
