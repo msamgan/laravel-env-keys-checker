@@ -72,7 +72,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Msamgan\\LaravelEnvKeysChecker\\LaravelEnvKeysCheckerServiceProvider"
+                    "Msamgan\\LaravelEnvKeysChecker\\LaravelEnvKeysCheckerServiceProvider"
             ],
             "aliases": {
                 "LaravelEnvKeysChecker": "Msamgan\\LaravelEnvKeysChecker\\Facades\\LaravelEnvKeysChecker"
