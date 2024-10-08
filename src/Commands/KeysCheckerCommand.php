@@ -6,17 +6,18 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\error;
-use function Laravel\Prompts\info;
 use function Laravel\Prompts\progress;
 use function Laravel\Prompts\table;
 
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
+use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
 class KeysCheckerCommand extends Command
 {
+    use HelperFunctions;
+
     public $signature = 'env:keys-check {--auto-add=}';
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
@@ -92,16 +93,6 @@ class KeysCheckerCommand extends Command
 
         return self::FAILURE;
 
-    }
-
-    private function showSuccessInfo(string $message): void
-    {
-        info(' => ' . $message);
-    }
-
-    private function showFailureInfo(string $message): void
-    {
-        error(' !! ' . $message);
     }
 
     private function showMissingKeysTable(Collection $missingKeys): void

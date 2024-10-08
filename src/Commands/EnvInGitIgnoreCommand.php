@@ -3,9 +3,12 @@
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
+use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
 class EnvInGitIgnoreCommand extends Command
 {
+    use HelperFunctions;
+
     public $signature = 'env:in-git-ignore';
 
     public $description = 'Check if .env file is in .gitignore file.';
@@ -15,7 +18,7 @@ class EnvInGitIgnoreCommand extends Command
         $gitIgnoreFile = base_path('.gitignore');
 
         if (! file_exists($gitIgnoreFile)) {
-            $this->error('!! .gitignore file not found.');
+            $this->showFailureInfo(message: '.gitignore file not found.');
 
             return self::FAILURE;
         }
@@ -32,12 +35,12 @@ class EnvInGitIgnoreCommand extends Command
         });
 
         if ($missingFiles->isEmpty()) {
-            $this->info('=> All files are present in .gitignore file.');
+            $this->showSuccessInfo(message: 'All files are present in .gitignore file.');
 
             return self::SUCCESS;
         }
 
-        $this->error('!! ' . $missingFiles->implode(', ') . ' file(s) not found in .gitignore file.');
+        $this->showFailureInfo(message: $missingFiles->implode(', ') . ' file(s) not found in .gitignore file.');
 
         return self::FAILURE;
     }
