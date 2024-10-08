@@ -27,8 +27,9 @@ You can install the package via composer:
 composer require msamgan/laravel-env-keys-checker --dev
 ```
 
-You can publish the config file with (recommended):
+To configure that package, you can add environment variables to your `.env` files. See the [config file](config/env-keys-checker.php) for details.
 
+If you prefer, you can also publish the config file with:
 ```bash
 php artisan vendor:publish --tag="env-keys-checker-config"
 ```
