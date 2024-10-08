@@ -2,7 +2,8 @@
 
 namespace Msamgan\LaravelEnvKeysChecker;
 
-use Msamgan\LaravelEnvKeysChecker\Commands\LaravelEnvKeysCheckerCommand;
+use Msamgan\LaravelEnvKeysChecker\Commands\EnvInGitIgnoreCommand;
+use Msamgan\LaravelEnvKeysChecker\Commands\KeysCheckerCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,6 +19,7 @@ class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-env-keys-checker')
             ->hasConfigFile()
-            ->hasCommand(LaravelEnvKeysCheckerCommand::class);
+            ->hasCommand(KeysCheckerCommand::class)
+            ->hasCommand(EnvInGitIgnoreCommand::class);
     }
 }
