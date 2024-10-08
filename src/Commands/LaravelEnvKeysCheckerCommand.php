@@ -5,6 +5,7 @@ namespace Msamgan\LaravelEnvKeysChecker\Commands;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\progress;
 use function Laravel\Prompts\table;
 
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
@@ -46,9 +47,13 @@ class LaravelEnvKeysCheckerCommand extends Command
         $keys = $getKeys->handle(files: $envFiles);
 
         $missingKeys = collect();
-        $keys->each(function ($keyData) use ($envFiles, $missingKeys, $checkKeys) {
-            $checkKeys->handle(keyData: $keyData, envFiles: $envFiles, missingKeys: $missingKeys);
-        });
+
+        progress(
+            label: 'Checking keys...',
+            steps: $keys,
+            callback: fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys),
+            hint: 'It won\'t take long.'
+        );
 
         if ($missingKeys->isEmpty()) {
             $this->info('=> All keys are present in across all .env files.');
@@ -84,5 +89,6 @@ class LaravelEnvKeysCheckerCommand extends Command
         }
 
         return self::FAILURE;
+
     }
 }
