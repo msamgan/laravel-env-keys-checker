@@ -103,6 +103,7 @@ You can configure the package by publishing the configuration file.
 ```php
 # config/env-keys-checker.php
 # List of all the .env files to ignore while checking the env keys
+# .env key: KEYS_CHECKER_IGNORE_FILES (coma separated string)
  
 'ignore_files' => [],
 ```
@@ -110,6 +111,7 @@ You can configure the package by publishing the configuration file.
 ```php
 # config/env-keys-checker.php
 # List of all the .env keys to ignore while checking the env keys
+# .env key: KEYS_CHECKER_IGNORE_KEYS (coma separated string)
 
 'ignore_keys' => [],
 ```
@@ -120,6 +122,7 @@ You can configure the package by publishing the configuration file.
 # ask: will ask the user to add the missing keys
 # auto: will add the missing keys automatically
 # none: will not add the missing keys
+# .env key: KEYS_CHECKER_AUTO_ADD (string)
 
 'auto_add' => 'ask',
 ```
@@ -128,6 +131,7 @@ You can configure the package by publishing the configuration file.
 # config/env-keys-checker.php
 # List of all the .env.* files to be checked if they
 # are present in the .gitignore file.
+# .env key: KEYS_CHECKER_GITIGNORE_FILES (coma separated string)
 
 'gitignore_files' => ['.env'],
 ```
