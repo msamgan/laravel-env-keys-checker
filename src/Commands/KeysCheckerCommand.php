@@ -3,8 +3,12 @@
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\progress;
 use function Laravel\Prompts\table;
 
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
@@ -28,13 +32,17 @@ class KeysCheckerCommand extends Command
         $autoAddStrategy = $autoAddOption ?: config('env-keys-checker.auto_add', 'ask');
 
         if (! in_array($autoAddStrategy, $autoAddAvailableOptions)) {
-            $this->error('!! Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions));
+            $this->showFailureInfo(
+                message: 'Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions)
+            );
 
             return self::FAILURE;
         }
 
         if (empty($envFiles)) {
-            $this->error('!! No .env files found.');
+            $this->showFailureInfo(
+                message: 'No .env files found.'
+            );
 
             return self::FAILURE;
         }
@@ -46,32 +54,31 @@ class KeysCheckerCommand extends Command
         $keys = $getKeys->handle(files: $envFiles);
 
         $missingKeys = collect();
-        $keys->each(function ($keyData) use ($envFiles, $missingKeys, $checkKeys) {
-            $checkKeys->handle(keyData: $keyData, envFiles: $envFiles, missingKeys: $missingKeys);
-        });
+
+        progress(
+            label: 'Checking keys...',
+            steps: $keys,
+            callback: fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys),
+            hint: 'It won\'t take long.'
+        );
 
         if ($missingKeys->isEmpty()) {
-            $this->info('=> All keys are present in across all .env files.');
+            $this->showSuccessInfo(
+                message: 'All keys are present in all .env files.'
+            );
 
             return self::SUCCESS;
         }
 
-        table(
-            headers: ['Line', 'Key', 'Is missing in'],
-            rows: $missingKeys->map(function ($missingKey) {
-                return [
-                    $missingKey['line'],
-                    $missingKey['key'],
-                    $missingKey['envFile'],
-                ];
-            })->toArray()
-        );
+        $this->showMissingKeysTable($missingKeys);
 
         if ($autoAddStrategy === 'ask') {
             $confirmation = confirm('Do you want to add the missing keys to the .env files?');
 
             if ($confirmation) {
                 $addKeys->handle(missingKeys: $missingKeys);
+
+                $this->showSuccessInfo('All missing keys have been added to the .env files.');
             }
 
             return self::SUCCESS;
@@ -84,5 +91,30 @@ class KeysCheckerCommand extends Command
         }
 
         return self::FAILURE;
+
+    }
+
+    private function showSuccessInfo(string $message): void
+    {
+        info(' => ' . $message);
+    }
+
+    private function showFailureInfo(string $message): void
+    {
+        error(' !! ' . $message);
+    }
+
+    private function showMissingKeysTable(Collection $missingKeys): void
+    {
+        table(
+            headers: ['Line', 'Key', 'Is missing in'],
+            rows: $missingKeys->map(function ($missingKey) {
+                return [
+                    $missingKey['line'],
+                    $missingKey['key'],
+                    $missingKey['envFile'],
+                ];
+            })->toArray()
+        );
     }
 }
