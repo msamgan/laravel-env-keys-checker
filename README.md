@@ -2,7 +2,6 @@
 
 ![image](https://github.com/user-attachments/assets/ad617e05-5d45-4b2c-a6b9-5cd095719fa3)
 
-
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/msamgan/laravel-env-keys-checker.svg?style=flat-square)](https://packagist.org/packages/msamgan/laravel-env-keys-checker)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/msamgan/laravel-env-keys-checker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/msamgan/laravel-env-keys-checker/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/msamgan/laravel-env-keys-checker.svg?style=flat-square)](https://packagist.org/packages/msamgan/laravel-env-keys-checker)
@@ -27,7 +26,11 @@ You can install the package via composer:
 composer require msamgan/laravel-env-keys-checker --dev
 ```
 
-To configure that package, you can add environment variables to your `.env` files. See the [config file](config/env-keys-checker.php) for details.
+To configure this package, you can add environment variables to your `.env` files. See
+the [config file](config/env-keys-checker.php) for details. Please make sure that you refresh the config cache after
+adding/updating the environment variables. ``php artisan config:cache``
+
+```bash
 
 If you prefer, you can also publish the config file with:
 ```bash
