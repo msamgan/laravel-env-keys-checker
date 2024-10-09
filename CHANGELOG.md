@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.4.0 - 2024-10-08
+
+### What's Changed
+
+* V1.4.0 by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/13
+* Add environment vars in config file by @pelmered in https://github.com/msamgan/laravel-env-keys-checker/pull/10
+
+### New Contributors
+
+* @pelmered made their first contribution in https://github.com/msamgan/laravel-env-keys-checker/pull/10
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.3.0...v1.4.0
+
 ## v1.3.0 - 2024-10-07
 
 ### What's Changed
