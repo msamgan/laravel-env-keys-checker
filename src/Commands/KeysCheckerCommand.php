@@ -18,7 +18,8 @@ class KeysCheckerCommand extends Command
 {
     use HelperFunctions;
 
-    public $signature = 'env:keys-check {--auto-add=}';
+    public $signature = 'env:keys-check
+    {--auto-add= : Auto add missing keys to the .env files. Available options: ask, auto, none}';
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
