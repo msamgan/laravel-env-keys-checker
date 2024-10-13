@@ -6,7 +6,8 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/msamgan/laravel-env-keys-checker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/msamgan/laravel-env-keys-checker/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/msamgan/laravel-env-keys-checker.svg?style=flat-square)](https://packagist.org/packages/msamgan/laravel-env-keys-checker)
 
-This package checks if all the keys are available across all the .env files. This package is useful when you have multiple .env files and want to ensure all the keys are available across all the .env files.
+This package checks if all the keys are available across all the .env files. This package is useful when you have
+multiple .env files and want to ensure all the keys are available across all the .env files.
 
 With a team of developers, it is possible that some developers might forget to add the keys they used in their .env file
 to the .env.example file or the other way around.
@@ -17,6 +18,7 @@ to the .env.example file or the other way around.
 - [Installation](#installation)
 - [Usage](#usage)
     - [To check if all the keys are available across all the .env files.](#to-check-if-all-the-keys-are-available-across-all-the-env-files)
+        - [Options](#options)
     - [To check if the .env and other provided files are present in .gitignore.](#to-check-if-the-env-and-other-provided-files-are-present-in-gitignore)
 - [In Test](#in-test)
     - [To check if all the keys are available across all the .env files.](#to-check-if-all-the-keys-are-available-across-all-the-env-files-1)
@@ -62,11 +64,14 @@ php artisan vendor:publish --tag="env-keys-checker-config"
 php artisan env:keys-check
 ```
 
-### To check if all the keys are available across all the .env files but without progress bar.
+#### Options
 
-```bash
-php artisan env:keys-check --no-progress
-```
+``--auto-add``: This option will add the missing keys to the .env files automatically.
+The possible values are ``ask``,
+``auto``, and ``none``.
+The default value is ``ask``.
+
+``--no-progress``: This option will disable the progress bar.
 
 ### To check if the .env and other provided files are present in .gitignore.
 
