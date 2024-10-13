@@ -56,7 +56,7 @@ class KeysCheckerCommand extends Command
 
         $missingKeys = collect();
 
-        $processKeys = fn($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
+        $processKeys = fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
 
         if ($this->option('no-progress')) {
             $keys->each($processKeys);
