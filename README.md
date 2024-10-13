@@ -65,6 +65,12 @@ php artisan vendor:publish --tag="env-keys-checker-config"
 php artisan env:keys-check
 ```
 
+### To check if all the keys are available across all the .env files but without progress bar.
+
+```bash
+php artisan env:keys-check --no-progress
+```
+
 ### To check if the .env and other provided files are present in .gitignore.
 
 ```bash
