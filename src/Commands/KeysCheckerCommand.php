@@ -18,7 +18,7 @@ class KeysCheckerCommand extends Command
 {
     use HelperFunctions;
 
-    public $signature = 'env:keys-check {--auto-add=} {--no-progress}';
+    public $signature = 'env:keys-check {--auto-add=} {--no-progress} {--no-display}';
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
@@ -52,6 +52,14 @@ class KeysCheckerCommand extends Command
             return ! in_array(basename($file), $ignoredFiles);
         })->toArray();
 
+        if (empty($envFiles)) {
+            $this->showFailureInfo(
+                message: 'No .env files found.'
+            );
+
+            return self::FAILURE;
+        }
+
         $keys = $getKeys->handle(files: $envFiles);
 
         $missingKeys = collect();
@@ -77,7 +85,9 @@ class KeysCheckerCommand extends Command
             return self::SUCCESS;
         }
 
-        $this->showMissingKeysTable($missingKeys);
+        if (! $this->option('no-display')) {
+            $this->showMissingKeysTable($missingKeys);
+        }
 
         if ($autoAddStrategy === 'ask') {
             $confirmation = confirm('Do you want to add the missing keys to the .env files?');
