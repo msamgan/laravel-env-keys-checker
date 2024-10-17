@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.4.1 - 2024-10-13
+
+### What's Changed
+
+* Added no progress option by @fkrzski in https://github.com/msamgan/laravel-env-keys-checker/pull/14
+
+### New Contributors
+
+* @fkrzski made their first contribution in https://github.com/msamgan/laravel-env-keys-checker/pull/14
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.4.0...v1.4.1
+
 ## v1.4.0 - 2024-10-08
 
 ### What's Changed

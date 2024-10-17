@@ -18,8 +18,7 @@ class KeysCheckerCommand extends Command
 {
     use HelperFunctions;
 
-    public $signature = 'env:keys-check
-    {--auto-add= : Auto add missing keys to the .env files. Available options: ask, auto, none}';
+    public $signature = 'env:keys-check {--auto-add=} {--no-progress}';
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
@@ -57,12 +56,18 @@ class KeysCheckerCommand extends Command
 
         $missingKeys = collect();
 
-        progress(
-            label: 'Checking keys...',
-            steps: $keys,
-            callback: fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys),
-            hint: 'It won\'t take long.'
-        );
+        $processKeys = fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
+
+        if ($this->option('no-progress')) {
+            $keys->each($processKeys);
+        } else {
+            progress(
+                label: 'Checking keys...',
+                steps: $keys,
+                callback: $processKeys,
+                hint: 'It won\'t take long.'
+            );
+        }
 
         if ($missingKeys->isEmpty()) {
             $this->showSuccessInfo(
