@@ -41,7 +41,7 @@ class EnvKeysSyncCommand extends Command
         }
 
         $envFiles = collect($envFiles)->filter(function ($file) use ($ignoredFiles) {
-            return ! in_array(basename($file), $ignoredFiles);
+            return !in_array(basename($file), $ignoredFiles);
         })->toArray();
 
         if (empty($envFiles)) {
@@ -66,14 +66,22 @@ class EnvKeysSyncCommand extends Command
                     continue;
                 }
 
-                [$keyMasterKey, $valueMaster] = explode('=', $keyMaster);
-                [$keyEnvFileKey, $valueEnvFile] = explode('=', $keyEnvFile);
+                $keyMasterKey = explode('=', $keyMaster)[0];
+                $keyEnvFileKey = explode('=', $keyEnvFile)[0];
 
                 if ($keyMasterKey === $keyEnvFileKey) {
                     continue;
                 }
 
-                dump($keyMaster, $keyEnvFile);
+                if ($this->checkIfComment($keyMaster)) {
+                    $this->pushKeyOnLine($envFile, $line, $keyMaster);
+                    continue;
+                }
+
+                dump($keyMasterKey, $keyEnvFileKey);
+
+                // todo: find the key in the env file and move it to the correct line
+                $this->moveKeyToLine($envFile, $keyMaster, $line);
             }
         });
 
@@ -83,5 +91,34 @@ class EnvKeysSyncCommand extends Command
     private function getKeyFromFileOnLine(string $file, int $line): string
     {
         return file($file)[$line - 1];
+    }
+
+    private function checkIfComment(string $line): bool
+    {
+        return str_starts_with($line, '#');
+    }
+
+    private function pushKeyOnLine($file, $line, $key): void
+    {
+        $lines = file($file);
+        array_splice($lines, $line - 1, 0, $key);
+
+        file_put_contents($file, implode('', $lines));
+    }
+
+    private function moveKeyToLine(string $file, string $key, int $toLine): void
+    {
+        $lines = file($file);
+        $keyLine = array_search($key, $lines);
+
+        if ($keyLine === false) {
+            return;
+        }
+
+        unset($lines[$keyLine]);
+
+        array_splice($lines, $toLine - 1, 0, $key);
+
+        file_put_contents($file, implode('', $lines));
     }
 }
