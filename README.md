@@ -20,6 +20,7 @@ to the .env.example file or the other way around.
     - [To check if all the keys are available across all the .env files.](#to-check-if-all-the-keys-are-available-across-all-the-env-files)
         - [Options](#options)
     - [To check if the .env and other provided files are present in .gitignore.](#to-check-if-the-env-and-other-provided-files-are-present-in-gitignore)
+    - [To sync all the available keys by line across all the .env files.](#to-sync-all-the-available-keys-by-line-across-all-the-env-files)
 - [In Test](#in-test)
     - [To check if all the keys are available across all the .env files.](#to-check-if-all-the-keys-are-available-across-all-the-env-files-1)
     - [To check if the .env and other provided files are present in .gitignore.](#to-check-if-the-env-and-other-provided-files-are-present-in-gitignore-1)
