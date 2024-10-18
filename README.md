@@ -155,6 +155,11 @@ You can configure the package by publishing the configuration file.
 'gitignore_files' => ['.env'],
 ```
 
+```php
+# Master .env file to be used for syncing the keys
+'master_env' => env('MASTER_ENV', '.env'),
+```
+
 ## Testing
 
 ```bash
