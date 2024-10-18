@@ -37,6 +37,7 @@ to the .env.example file or the other way around.
 - Add the missing keys to the .env files automatically (configurable) considering the line numbers and empty lines.
 - Check if the .env and other provided files are present in .gitignore, so that they are not committed to git by
   mistake.
+- Sync all the available keys by line across all the .env files. Referencing the master .env file. (Configurable, default is .env)
 
 ## Installation
 
@@ -73,10 +74,18 @@ The default value is ``ask``.
 
 ``--no-progress``: This option will disable the progress bar.
 
+``--no-display``: This option will disable all output.
+
 ### To check if the .env and other provided files are present in .gitignore.
 
 ```bash
 php artisan env:in-git-ignore
+```
+
+### To sync all the available keys by line across all the .env files.
+
+```bash
+php artisan env:sync-keys
 ```
 
 ## In Test

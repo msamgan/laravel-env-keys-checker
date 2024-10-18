@@ -16,4 +16,7 @@ return [
     // List of all the .env.* files to be checked if they
     // are present in the .gitignore file
     'gitignore_files' => explode(',', env('KEYS_CHECKER_GITIGNORE_FILES', '.env')),
+
+    // Master .env file to be used for syncing the keys
+    'master_env' => env('MASTER_ENV', '.env'),
 ];
