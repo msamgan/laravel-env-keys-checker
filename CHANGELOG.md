@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.5.0 - 2024-10-18
+
+### What's Changed
+
+* Env key sync by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/15
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.4.1...v1.5.0
+
 ## v1.4.1 - 2024-10-13
 
 ### What's Changed
