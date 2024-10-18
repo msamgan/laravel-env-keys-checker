@@ -41,7 +41,7 @@ class EnvKeysSyncCommand extends Command
         }
 
         $envFiles = collect($envFiles)->filter(function ($file) use ($ignoredFiles) {
-            return !in_array(basename($file), $ignoredFiles);
+            return ! in_array(basename($file), $ignoredFiles);
         })->toArray();
 
         if (empty($envFiles)) {
@@ -75,15 +75,25 @@ class EnvKeysSyncCommand extends Command
 
                 if ($this->checkIfComment($keyMaster)) {
                     $this->pushKeyOnLine($envFile, $line, $keyMaster);
+
                     continue;
                 }
 
-                dump($keyMasterKey, $keyEnvFileKey);
+                if ($this->checkIfEmptyLine($keyMaster)) {
+                    $this->pushKeyOnLine($envFile, $line, $keyMaster);
 
-                // todo: find the key in the env file and move it to the correct line
-                $this->moveKeyToLine($envFile, $keyMaster, $line);
+                    continue;
+                }
+
+                $this->moveKeyToLine($envFile, $keyMasterKey, $line);
             }
+
+            $this->removeAllLinesAfter($totalKeysFromMaster, $envFile);
         });
+
+        $this->showSuccessInfo(
+            message: 'Keys synced successfully.'
+        );
 
         return self::SUCCESS;
     }
@@ -106,18 +116,36 @@ class EnvKeysSyncCommand extends Command
         file_put_contents($file, implode('', $lines));
     }
 
+    private function checkIfEmptyLine(string $line): bool
+    {
+        return $line === "\n";
+    }
+
     private function moveKeyToLine(string $file, string $key, int $toLine): void
     {
         $lines = file($file);
-        $keyLine = array_search($key, $lines);
+        $keyLine = array_filter($lines, function ($line) use ($key) {
+            return str_starts_with($line, $key);
+        });
 
-        if ($keyLine === false) {
+        if (empty($keyLine)) {
             return;
         }
 
+        $keyLine = array_keys($keyLine)[0];
+        $keyData = $lines[$keyLine];
+
         unset($lines[$keyLine]);
 
-        array_splice($lines, $toLine - 1, 0, $key);
+        array_splice($lines, $toLine - 1, 0, $keyData);
+
+        file_put_contents($file, implode('', $lines));
+    }
+
+    private function removeAllLinesAfter(int $lineNumber, string $file): void
+    {
+        $lines = file($file);
+        $lines = array_slice($lines, 0, $lineNumber);
 
         file_put_contents($file, implode('', $lines));
     }
