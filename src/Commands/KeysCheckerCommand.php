@@ -4,13 +4,15 @@ namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\progress;
+use function Laravel\Prompts\table;
+
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\progress;
-use function Laravel\Prompts\table;
 
 class KeysCheckerCommand extends Command
 {
@@ -30,8 +32,8 @@ class KeysCheckerCommand extends Command
 
         $autoAddStrategy = $autoAddOption ?: config('env-keys-checker.auto_add', 'ask');
 
-        if (!in_array($autoAddStrategy, $autoAddAvailableOptions)) {
-            if (!$this->option('no-display')) {
+        if (! in_array($autoAddStrategy, $autoAddAvailableOptions)) {
+            if (! $this->option('no-display')) {
                 $this->showFailureInfo(
                     message: 'Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions)
                 );
@@ -41,7 +43,7 @@ class KeysCheckerCommand extends Command
         }
 
         if (empty($envFiles)) {
-            if (!$this->option('no-display')) {
+            if (! $this->option('no-display')) {
                 $this->showFailureInfo(
                     message: 'No .env files found.'
                 );
@@ -51,11 +53,11 @@ class KeysCheckerCommand extends Command
         }
 
         $envFiles = collect($envFiles)->filter(function ($file) use ($ignoredFiles) {
-            return !in_array(basename($file), $ignoredFiles);
+            return ! in_array(basename($file), $ignoredFiles);
         })->toArray();
 
         if (empty($envFiles)) {
-            if (!$this->option('no-display')) {
+            if (! $this->option('no-display')) {
                 $this->showFailureInfo(
                     message: 'No .env files found.'
                 );
@@ -68,7 +70,7 @@ class KeysCheckerCommand extends Command
 
         $missingKeys = collect();
 
-        $processKeys = fn($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
+        $processKeys = fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
 
         if ($this->option('no-progress')) {
             $keys->each($processKeys);
@@ -82,7 +84,7 @@ class KeysCheckerCommand extends Command
         }
 
         if ($missingKeys->isEmpty()) {
-            if (!$this->option('no-display')) {
+            if (! $this->option('no-display')) {
                 $this->showSuccessInfo(
                     message: 'All keys are present in all .env files.'
                 );
@@ -91,7 +93,7 @@ class KeysCheckerCommand extends Command
             return self::SUCCESS;
         }
 
-        if (!$this->option('no-display')) {
+        if (! $this->option('no-display')) {
             $this->showMissingKeysTable($missingKeys);
         }
 
@@ -101,7 +103,7 @@ class KeysCheckerCommand extends Command
             if ($confirmation) {
                 $addKeys->handle(missingKeys: $missingKeys);
 
-                if (!$this->option('no-display')) {
+                if (! $this->option('no-display')) {
                     $this->showSuccessInfo('All missing keys have been added to the .env files.');
                 }
             }
