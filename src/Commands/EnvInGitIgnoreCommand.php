@@ -15,22 +15,22 @@ class EnvInGitIgnoreCommand extends Command
 
     public function handle(): int
     {
-        $gitIgnoreFile = base_path('.gitignore');
+        $gitIgnoreFile = base_path(path: '.gitignore');
 
-        if (! file_exists($gitIgnoreFile)) {
+        if (! file_exists(filename: $gitIgnoreFile)) {
             $this->showFailureInfo(message: '.gitignore file not found.');
 
             return self::FAILURE;
         }
 
-        $gitIgnoreContent = array_map('trim', file($gitIgnoreFile));
+        $gitIgnoreContent = array_map(callback: 'trim', array: file($gitIgnoreFile));
 
-        $filesToCheck = config('env-keys-checker.gitignore_files', ['.env']);
+        $filesToCheck = config(key: 'env-keys-checker.gitignore_files', default: ['.env']);
 
         $missingFiles = collect();
-        collect($filesToCheck)->each(function ($file) use ($gitIgnoreContent, $missingFiles) {
-            if (! in_array($file, $gitIgnoreContent)) {
-                $missingFiles->push($file);
+        collect(value: $filesToCheck)->each(callback: function ($file) use ($gitIgnoreContent, $missingFiles) {
+            if (! in_array(needle: $file, haystack: $gitIgnoreContent)) {
+                $missingFiles->push(values: $file);
             }
         });
 
@@ -40,7 +40,7 @@ class EnvInGitIgnoreCommand extends Command
             return self::SUCCESS;
         }
 
-        $this->showFailureInfo(message: $missingFiles->implode(', ') . ' file(s) not found in .gitignore file.');
+        $this->showFailureInfo(message: $missingFiles->implode(value: ', ') . ' file(s) not found in .gitignore file.');
 
         return self::FAILURE;
     }

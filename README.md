@@ -151,6 +151,7 @@ You can configure the package by publishing the configuration file.
 # List of all the .env.* files to be checked if they
 # are present in the .gitignore file.
 # .env key: KEYS_CHECKER_GITIGNORE_FILES (coma separated string)
+# note: if you are adding this key (KEYS_CHECKER_GITIGNORE_FILES) to the .env file, make sure to add the .env as value else it will take "" as default value.
 
 'gitignore_files' => ['.env'],
 ```

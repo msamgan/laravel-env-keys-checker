@@ -24,43 +24,37 @@ class KeysCheckerCommand extends Command
 
     public function handle(GetKeys $getKeys, CheckKeys $checkKeys, AddKeys $addKeys): int
     {
-        $envFiles = glob(base_path('.env*'));
+        $envFiles = glob(base_path(path: '.env*'));
 
-        $ignoredFiles = config('env-keys-checker.ignore_files', []);
-        $autoAddOption = $this->option('auto-add');
+        $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
+        $autoAddOption = $this->option(key: 'auto-add');
         $autoAddAvailableOptions = ['ask', 'auto', 'none'];
 
-        $autoAddStrategy = $autoAddOption ?: config('env-keys-checker.auto_add', 'ask');
+        $autoAddStrategy = $autoAddOption ?: config(key: 'env-keys-checker.auto_add', default: 'ask');
 
-        if (! in_array($autoAddStrategy, $autoAddAvailableOptions)) {
-            if (! $this->option('no-display')) {
-                $this->showFailureInfo(
-                    message: 'Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions)
-                );
+        if (! in_array(needle: $autoAddStrategy, haystack: $autoAddAvailableOptions)) {
+            if (! $this->option(key: 'no-display')) {
+                $this->showFailureInfo(message: 'Invalid auto add option provided. Available options are: ' . implode(', ', $autoAddAvailableOptions));
             }
 
             return self::FAILURE;
         }
 
         if (empty($envFiles)) {
-            if (! $this->option('no-display')) {
-                $this->showFailureInfo(
-                    message: 'No .env files found.'
-                );
+            if (! $this->option(key: 'no-display')) {
+                $this->showFailureInfo(message: 'No .env files found.');
             }
 
             return self::FAILURE;
         }
 
-        $envFiles = collect($envFiles)->filter(function ($file) use ($ignoredFiles) {
-            return ! in_array(basename($file), $ignoredFiles);
+        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) use ($ignoredFiles) {
+            return ! in_array(needle: basename($file), haystack: $ignoredFiles);
         })->toArray();
 
         if (empty($envFiles)) {
-            if (! $this->option('no-display')) {
-                $this->showFailureInfo(
-                    message: 'No .env files found.'
-                );
+            if (! $this->option(key: 'no-display')) {
+                $this->showFailureInfo(message: 'No .env files found.');
             }
 
             return self::FAILURE;
@@ -72,8 +66,8 @@ class KeysCheckerCommand extends Command
 
         $processKeys = fn ($key) => $checkKeys->handle(keyData: $key, envFiles: $envFiles, missingKeys: $missingKeys);
 
-        if ($this->option('no-progress')) {
-            $keys->each($processKeys);
+        if ($this->option(key: 'no-progress')) {
+            $keys->each(callback: $processKeys);
         } else {
             progress(
                 label: 'Checking keys...',
@@ -84,27 +78,25 @@ class KeysCheckerCommand extends Command
         }
 
         if ($missingKeys->isEmpty()) {
-            if (! $this->option('no-display')) {
-                $this->showSuccessInfo(
-                    message: 'All keys are present in all .env files.'
-                );
+            if (! $this->option(key: 'no-display')) {
+                $this->showSuccessInfo(message: 'All keys are present in all .env files.');
             }
 
             return self::SUCCESS;
         }
 
-        if (! $this->option('no-display')) {
-            $this->showMissingKeysTable($missingKeys);
+        if (! $this->option(key: 'no-display')) {
+            $this->showMissingKeysTable(missingKeys: $missingKeys);
         }
 
         if ($autoAddStrategy === 'ask') {
-            $confirmation = confirm('Do you want to add the missing keys to the .env files?');
+            $confirmation = confirm(label: 'Do you want to add the missing keys to the .env files?');
 
             if ($confirmation) {
                 $addKeys->handle(missingKeys: $missingKeys);
 
-                if (! $this->option('no-display')) {
-                    $this->showSuccessInfo('All missing keys have been added to the .env files.');
+                if (! $this->option(key: 'no-display')) {
+                    $this->showSuccessInfo(message: 'All missing keys have been added to the .env files.');
                 }
             }
 
@@ -125,7 +117,7 @@ class KeysCheckerCommand extends Command
     {
         table(
             headers: ['Line', 'Key', 'Is missing in'],
-            rows: $missingKeys->map(function ($missingKey) {
+            rows: $missingKeys->map(callback: function ($missingKey) {
                 return [
                     $missingKey['line'],
                     $missingKey['key'],
