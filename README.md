@@ -1,3 +1,29 @@
+To use this package:
+
+Temporarily add this fork to the repositories property of your composer.json:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/jefhar/laravel-env-keys-checker.git"
+        }
+    ]
+}
+```
+Then update your dependency constraint to reference this branch:
+
+```json
+{
+    "require": {
+        "msamgan/laravel-env-keys-checker": "dev-l12-compatibility",
+    }
+}
+```
+
+Finally, run: `composer update`
+
 # Check if all the keys are available across all the .env files.
 
 ![image](https://github.com/user-attachments/assets/8f80ef4a-a777-46ed-bc49-e70e3c1bec60)
