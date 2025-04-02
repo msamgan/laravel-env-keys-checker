@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.7.0 - 2025-04-02
+
+### What's Changed
+
+* L12 support by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/22
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.6.0...v1.7.0
+
 ## v1.6.0 - 2025-02-24
 
 ### What's Changed
