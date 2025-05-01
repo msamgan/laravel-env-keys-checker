@@ -6,7 +6,16 @@
         "laravel",
         "laravel-env-keys-checker"
     ],
-    "homepage": "https://github.com/msamgan/laravel-env-keys-checker",
+    "homepage": "https://msamgan.com/docs/env-checker",
+    "support": {
+        "email": "mohdsamgankhan@gmail.com",
+        "url": "https://msamgan.com/contact"
+    },
+    "source": {
+        "type": "git",
+        "url": "https://github.com/msamgan/laravel-env-keys-checker",
+        "reference": "v1.7.0"
+    },
     "license": "MIT",
     "authors": [
         {
