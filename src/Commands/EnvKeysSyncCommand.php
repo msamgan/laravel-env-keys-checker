@@ -39,7 +39,9 @@ final class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename(path: $file), haystack: $ignoredFiles))->toArray();
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename(path: $file), haystack: (array) $ignoredFiles))->toArray();
+
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => str_ends_with(haystack: basename((string) $file), needle: '.encrypted'))->toArray();
 
         if (empty($envFiles)) {
             $this->showFailureInfo(message: 'No .env files found.');
@@ -91,12 +93,12 @@ final class EnvKeysSyncCommand extends Command
 
     private function getMasterEnv(): string
     {
-        return config(key: 'env-keys-checker.master_env', default: '.env');
+        return (string) config(key: 'env-keys-checker.master_env', default: '.env');
     }
 
     private function getKeyFromFileOnLine(string $file, int $line): string
     {
-        return file(filename: $file)[$line - 1];
+        return file(filename: $file)[$line - 1] ?? '';
     }
 
     private function checkIfComment(string $line): bool

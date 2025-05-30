@@ -49,7 +49,9 @@ final class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename($file), haystack: $ignoredFiles))->toArray();
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename($file), haystack: (array) $ignoredFiles))->toArray();
+
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => str_ends_with(haystack: basename((string) $file), needle: '.encrypted'))->toArray();
 
         if (empty($envFiles)) {
             if (! $this->option(key: 'no-display')) {
