@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
+use Msamgan\LaravelEnvKeysChecker\Actions\FilterFiles;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
 final class EnvKeysSyncCommand extends Command
@@ -15,7 +16,7 @@ final class EnvKeysSyncCommand extends Command
 
     public $description = 'Sync keys from master .env file to other .env files.';
 
-    public function handle(): int
+    public function handle(FilterFiles $filterFiles): int
     {
         $allKeysCheck = $this->call('env:keys-check', [
             '--auto-add' => 'none',
@@ -30,7 +31,7 @@ final class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = glob(pattern: base_path(path: '.env*'));
+        $envFiles = $this->getEnvs();
         $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
 
         if ($envFiles === [] || $envFiles === false) {
@@ -39,11 +40,9 @@ final class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename(path: $file), haystack: (array) $ignoredFiles))->toArray();
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: (array) $ignoredFiles);
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => str_ends_with(haystack: basename((string) $file), needle: '.encrypted'))->toArray();
-
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             $this->showFailureInfo(message: 'No .env files found.');
 
             return self::FAILURE;

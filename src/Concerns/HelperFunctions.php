@@ -18,4 +18,9 @@ trait HelperFunctions
     {
         error(message: ' !! ' . $message);
     }
+
+    private function getEnvs(): array
+    {
+        return glob(pattern: base_path(path: '.env*'));
+    }
 }

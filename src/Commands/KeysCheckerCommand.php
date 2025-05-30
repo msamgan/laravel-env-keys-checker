@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
+use Msamgan\LaravelEnvKeysChecker\Actions\FilterFiles;
 use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
@@ -23,9 +24,9 @@ final class KeysCheckerCommand extends Command
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
-    public function handle(GetKeys $getKeys, CheckKeys $checkKeys, AddKeys $addKeys): int
+    public function handle(GetKeys $getKeys, CheckKeys $checkKeys, AddKeys $addKeys, FilterFiles $filterFiles): int
     {
-        $envFiles = glob(base_path(path: '.env*'));
+        $envFiles = $this->getEnvs();
 
         $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
         $autoAddOption = $this->option(key: 'auto-add');
@@ -49,11 +50,9 @@ final class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename($file), haystack: (array) $ignoredFiles))->toArray();
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: (array) $ignoredFiles);
 
-        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => str_ends_with(haystack: basename((string) $file), needle: '.encrypted'))->toArray();
-
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             if (! $this->option(key: 'no-display')) {
                 $this->showFailureInfo(message: 'No .env files found.');
             }
