@@ -42,7 +42,7 @@ final class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        if ($envFiles === [] || $envFiles === false) {
+        if ($envFiles === []) {
             if (! $this->option(key: 'no-display')) {
                 $this->showFailureInfo(message: 'No .env files found.');
             }

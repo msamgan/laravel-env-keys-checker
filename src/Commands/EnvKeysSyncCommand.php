@@ -34,7 +34,7 @@ final class EnvKeysSyncCommand extends Command
         $envFiles = $this->getEnvs();
         $ignoredFiles = $this->getFilesToIgnore();
 
-        if ($envFiles === [] || $envFiles === false) {
+        if ($envFiles === []) {
             $this->showFailureInfo(message: 'No .env files found.');
 
             return self::FAILURE;
