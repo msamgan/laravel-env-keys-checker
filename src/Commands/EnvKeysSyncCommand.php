@@ -32,7 +32,7 @@ final class EnvKeysSyncCommand extends Command
         }
 
         $envFiles = $this->getEnvs();
-        $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
+        $ignoredFiles = $this->getFilesToIgnore();
 
         if ($envFiles === [] || $envFiles === false) {
             $this->showFailureInfo(message: 'No .env files found.');
@@ -40,7 +40,7 @@ final class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: (array) $ignoredFiles);
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: $ignoredFiles);
 
         if ($envFiles === []) {
             $this->showFailureInfo(message: 'No .env files found.');

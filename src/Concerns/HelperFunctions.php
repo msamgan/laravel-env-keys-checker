@@ -23,4 +23,9 @@ trait HelperFunctions
     {
         return glob(pattern: base_path(path: '.env*'));
     }
+
+    private function getFilesToIgnore(): array
+    {
+        return (array) config(key: 'env-keys-checker.ignore_files', default: []);
+    }
 }

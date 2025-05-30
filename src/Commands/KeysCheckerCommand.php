@@ -28,7 +28,7 @@ final class KeysCheckerCommand extends Command
     {
         $envFiles = $this->getEnvs();
 
-        $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
+        $ignoredFiles = $this->getFilesToIgnore();
         $autoAddOption = $this->option(key: 'auto-add');
         $autoAddAvailableOptions = ['ask', 'auto', 'none'];
 
@@ -50,7 +50,7 @@ final class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: (array) $ignoredFiles);
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: $ignoredFiles);
 
         if ($envFiles === []) {
             if (! $this->option(key: 'no-display')) {
