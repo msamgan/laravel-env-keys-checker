@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
+use Msamgan\LaravelEnvKeysChecker\Actions\FilterFiles;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
-class EnvKeysSyncCommand extends Command
+final class EnvKeysSyncCommand extends Command
 {
     use HelperFunctions;
 
@@ -13,7 +16,7 @@ class EnvKeysSyncCommand extends Command
 
     public $description = 'Sync keys from master .env file to other .env files.';
 
-    public function handle(): int
+    public function handle(FilterFiles $filterFiles): int
     {
         $allKeysCheck = $this->call('env:keys-check', [
             '--auto-add' => 'none',
@@ -28,30 +31,26 @@ class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = glob(pattern: base_path(path: '.env*'));
-        $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
+        $envFiles = $this->getEnvs();
+        $ignoredFiles = $this->getFilesToIgnore();
 
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             $this->showFailureInfo(message: 'No .env files found.');
 
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) use ($ignoredFiles) {
-            return ! in_array(needle: basename(path: $file), haystack: $ignoredFiles);
-        })->toArray();
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: $ignoredFiles);
 
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             $this->showFailureInfo(message: 'No .env files found.');
 
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) {
-            return basename(path: $file) !== $this->getMasterEnv();
-        });
+        $envFiles = collect(value: $envFiles)->filter(callback: fn ($file): bool => basename(path: (string) $file) !== $this->getMasterEnv());
 
-        $envFiles->each(callback: function ($envFile) {
+        $envFiles->each(callback: function ($envFile): void {
             $totalKeysFromMaster = count(value: file(filename: $this->getMasterEnv()));
             for ($line = 1; $line <= $totalKeysFromMaster; $line++) {
                 $keyMaster = $this->getKeyFromFileOnLine(file: $this->getMasterEnv(), line: $line);
@@ -93,12 +92,12 @@ class EnvKeysSyncCommand extends Command
 
     private function getMasterEnv(): string
     {
-        return config(key: 'env-keys-checker.master_env', default: '.env');
+        return (string) config(key: 'env-keys-checker.master_env', default: '.env');
     }
 
     private function getKeyFromFileOnLine(string $file, int $line): string
     {
-        return file(filename: $file)[$line - 1];
+        return file(filename: $file)[$line - 1] ?? '';
     }
 
     private function checkIfComment(string $line): bool
@@ -122,11 +121,9 @@ class EnvKeysSyncCommand extends Command
     private function moveKeyToLine(string $file, string $key, int $toLine): void
     {
         $lines = file(filename: $file);
-        $keyLine = array_filter(array: $lines, callback: function ($line) use ($key) {
-            return str_starts_with($line, $key);
-        });
+        $keyLine = array_filter(array: $lines, callback: fn ($line): bool => str_starts_with($line, $key));
 
-        if (empty($keyLine)) {
+        if ($keyLine === []) {
             return;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Concerns;
 
 use function Laravel\Prompts\error;
@@ -15,5 +17,15 @@ trait HelperFunctions
     private function showFailureInfo(string $message): void
     {
         error(message: ' !! ' . $message);
+    }
+
+    private function getEnvs(): array
+    {
+        return glob(pattern: base_path(path: '.env*'));
+    }
+
+    private function getFilesToIgnore(): array
+    {
+        return (array) config(key: 'env-keys-checker.ignore_files', default: []);
     }
 }

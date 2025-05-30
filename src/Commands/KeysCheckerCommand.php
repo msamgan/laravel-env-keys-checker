@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
+use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
+use Msamgan\LaravelEnvKeysChecker\Actions\FilterFiles;
+use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
+use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\progress;
 use function Laravel\Prompts\table;
 
-use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
-use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
-use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
-use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
-
-class KeysCheckerCommand extends Command
+final class KeysCheckerCommand extends Command
 {
     use HelperFunctions;
 
@@ -22,11 +24,11 @@ class KeysCheckerCommand extends Command
 
     public $description = 'Check if all keys in .env file are present across all .env files. Like .env, .env.example, .env.testing, etc.';
 
-    public function handle(GetKeys $getKeys, CheckKeys $checkKeys, AddKeys $addKeys): int
+    public function handle(GetKeys $getKeys, CheckKeys $checkKeys, AddKeys $addKeys, FilterFiles $filterFiles): int
     {
-        $envFiles = glob(base_path(path: '.env*'));
+        $envFiles = $this->getEnvs();
 
-        $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
+        $ignoredFiles = $this->getFilesToIgnore();
         $autoAddOption = $this->option(key: 'auto-add');
         $autoAddAvailableOptions = ['ask', 'auto', 'none'];
 
@@ -40,7 +42,7 @@ class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             if (! $this->option(key: 'no-display')) {
                 $this->showFailureInfo(message: 'No .env files found.');
             }
@@ -48,11 +50,9 @@ class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) use ($ignoredFiles) {
-            return ! in_array(needle: basename($file), haystack: $ignoredFiles);
-        })->toArray();
+        $envFiles = $filterFiles->handle(envFiles: $envFiles, ignoredFiles: $ignoredFiles);
 
-        if (empty($envFiles)) {
+        if ($envFiles === []) {
             if (! $this->option(key: 'no-display')) {
                 $this->showFailureInfo(message: 'No .env files found.');
             }
@@ -117,13 +117,11 @@ class KeysCheckerCommand extends Command
     {
         table(
             headers: ['Line', 'Key', 'Is missing in'],
-            rows: $missingKeys->map(callback: function ($missingKey) {
-                return [
-                    $missingKey['line'],
-                    $missingKey['key'],
-                    $missingKey['envFile'],
-                ];
-            })->toArray()
+            rows: $missingKeys->map(callback: fn ($missingKey): array => [
+                $missingKey['line'],
+                $missingKey['key'],
+                $missingKey['envFile'],
+            ])->toArray()
         );
     }
 }
