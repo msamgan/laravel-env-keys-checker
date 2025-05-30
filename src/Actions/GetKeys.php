@@ -16,7 +16,7 @@ class GetKeys
 
         return $files
             ->map(function ($file) use ($ignoredKeys, $withComments) {
-                $collection = collect(file($file))->map(function ($line, $index) use ($file) {
+                $collection = collect(file($file))->map(function ($line, $index) use ($file): array {
                     [$key] = explode('=', $line);
 
                     return [
@@ -27,14 +27,10 @@ class GetKeys
                 });
 
                 if (! $withComments) {
-                    $collection = $collection->filter(function ($item) {
-                        return $item['key'] !== "\n" && ! str_starts_with($item['key'], '#');
-                    });
+                    $collection = $collection->filter(fn ($item): bool => $item['key'] !== "\n" && ! str_starts_with((string) $item['key'], '#'));
                 }
 
-                return $collection->filter(function ($keyData) use ($ignoredKeys) {
-                    return ! in_array($keyData['key'], $ignoredKeys);
-                });
+                return $collection->reject(fn ($keyData): bool => in_array($keyData['key'], $ignoredKeys));
             })
             ->flatten(1)
             ->unique('key');

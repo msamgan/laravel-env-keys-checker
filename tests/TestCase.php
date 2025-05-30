@@ -5,18 +5,21 @@ namespace Msamgan\LaravelEnvKeysChecker\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Msamgan\LaravelEnvKeysChecker\LaravelEnvKeysCheckerServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Override;
 
 class TestCase extends Orchestra
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Msamgan\\LaravelEnvKeysChecker\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName): string => 'Msamgan\\LaravelEnvKeysChecker\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
+    #[Override]
     protected function getPackageProviders($app)
     {
         return [
@@ -24,7 +27,8 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    #[Override]
+    public function getEnvironmentSetUp($app): void
     {
         config()->set('database.default', 'testing');
 

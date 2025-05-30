@@ -8,7 +8,7 @@ class AddKeys
 {
     public function handle(Collection $missingKeys): void
     {
-        $missingKeys->each(function ($missingKey) {
+        $missingKeys->each(function (array $missingKey): void {
             $filePath = base_path($missingKey['envFile']);
             $envContent = file($filePath);
 

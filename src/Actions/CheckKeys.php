@@ -8,12 +8,12 @@ class CheckKeys
 {
     public function handle(array $keyData, array $envFiles, Collection $missingKeys): void
     {
-        collect($envFiles)->each(function ($envFile) use ($keyData, $missingKeys) {
+        collect($envFiles)->each(function ($envFile) use ($keyData, $missingKeys): void {
             $envContent = file($envFile);
             $keyExists = false;
 
             foreach ($envContent as $line) {
-                if (str_starts_with($line, $keyData['key'])) {
+                if (str_starts_with($line, (string) $keyData['key'])) {
                     $keyExists = true;
                     break;
                 }

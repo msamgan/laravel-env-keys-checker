@@ -28,7 +28,7 @@ class EnvInGitIgnoreCommand extends Command
         $filesToCheck = config(key: 'env-keys-checker.gitignore_files', default: ['.env']);
 
         $missingFiles = collect();
-        collect(value: $filesToCheck)->each(callback: function ($file) use ($gitIgnoreContent, $missingFiles) {
+        collect(value: $filesToCheck)->each(callback: function ($file) use ($gitIgnoreContent, $missingFiles): void {
             if (! in_array(needle: $file, haystack: $gitIgnoreContent)) {
                 $missingFiles->push(values: $file);
             }

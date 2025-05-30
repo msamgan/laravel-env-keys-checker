@@ -31,27 +31,23 @@ class EnvKeysSyncCommand extends Command
         $envFiles = glob(pattern: base_path(path: '.env*'));
         $ignoredFiles = config(key: 'env-keys-checker.ignore_files', default: []);
 
+        if ($envFiles === [] || $envFiles === false) {
+            $this->showFailureInfo(message: 'No .env files found.');
+
+            return self::FAILURE;
+        }
+
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename(path: $file), haystack: $ignoredFiles))->toArray();
+
         if (empty($envFiles)) {
             $this->showFailureInfo(message: 'No .env files found.');
 
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) use ($ignoredFiles) {
-            return ! in_array(needle: basename(path: $file), haystack: $ignoredFiles);
-        })->toArray();
+        $envFiles = collect(value: $envFiles)->filter(callback: fn ($file): bool => basename(path: (string) $file) !== $this->getMasterEnv());
 
-        if (empty($envFiles)) {
-            $this->showFailureInfo(message: 'No .env files found.');
-
-            return self::FAILURE;
-        }
-
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) {
-            return basename(path: $file) !== $this->getMasterEnv();
-        });
-
-        $envFiles->each(callback: function ($envFile) {
+        $envFiles->each(callback: function ($envFile): void {
             $totalKeysFromMaster = count(value: file(filename: $this->getMasterEnv()));
             for ($line = 1; $line <= $totalKeysFromMaster; $line++) {
                 $keyMaster = $this->getKeyFromFileOnLine(file: $this->getMasterEnv(), line: $line);
@@ -122,11 +118,9 @@ class EnvKeysSyncCommand extends Command
     private function moveKeyToLine(string $file, string $key, int $toLine): void
     {
         $lines = file(filename: $file);
-        $keyLine = array_filter(array: $lines, callback: function ($line) use ($key) {
-            return str_starts_with($line, $key);
-        });
+        $keyLine = array_filter(array: $lines, callback: fn ($line): bool => str_starts_with((string) $line, $key));
 
-        if (empty($keyLine)) {
+        if ($keyLine === []) {
             return;
         }
 

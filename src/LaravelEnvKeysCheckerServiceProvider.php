@@ -5,11 +5,13 @@ namespace Msamgan\LaravelEnvKeysChecker;
 use Msamgan\LaravelEnvKeysChecker\Commands\EnvInGitIgnoreCommand;
 use Msamgan\LaravelEnvKeysChecker\Commands\EnvKeysSyncCommand;
 use Msamgan\LaravelEnvKeysChecker\Commands\KeysCheckerCommand;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
 {
+    #[Override]
     public function configurePackage(Package $package): void
     {
         /*

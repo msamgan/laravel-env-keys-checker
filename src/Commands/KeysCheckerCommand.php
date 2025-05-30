@@ -40,7 +40,7 @@ class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        if (empty($envFiles)) {
+        if ($envFiles === [] || $envFiles === false) {
             if (! $this->option(key: 'no-display')) {
                 $this->showFailureInfo(message: 'No .env files found.');
             }
@@ -48,9 +48,7 @@ class KeysCheckerCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: function ($file) use ($ignoredFiles) {
-            return ! in_array(needle: basename($file), haystack: $ignoredFiles);
-        })->toArray();
+        $envFiles = collect(value: $envFiles)->reject(callback: fn ($file): bool => in_array(needle: basename($file), haystack: $ignoredFiles))->toArray();
 
         if (empty($envFiles)) {
             if (! $this->option(key: 'no-display')) {
@@ -117,13 +115,11 @@ class KeysCheckerCommand extends Command
     {
         table(
             headers: ['Line', 'Key', 'Is missing in'],
-            rows: $missingKeys->map(callback: function ($missingKey) {
-                return [
-                    $missingKey['line'],
-                    $missingKey['key'],
-                    $missingKey['envFile'],
-                ];
-            })->toArray()
+            rows: $missingKeys->map(callback: fn ($missingKey): array => [
+                $missingKey['line'],
+                $missingKey['key'],
+                $missingKey['envFile'],
+            ])->toArray()
         );
     }
 }
