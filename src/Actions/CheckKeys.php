@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Actions;
 
 use Illuminate\Support\Collection;
 
-class CheckKeys
+final class CheckKeys
 {
     public function handle(array $keyData, array $envFiles, Collection $missingKeys): void
     {

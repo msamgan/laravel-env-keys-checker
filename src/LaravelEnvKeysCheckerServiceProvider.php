@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker;
 
 use Msamgan\LaravelEnvKeysChecker\Commands\EnvInGitIgnoreCommand;
@@ -9,7 +11,7 @@ use Override;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
+final class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
 {
     #[Override]
     public function configurePackage(Package $package): void

@@ -20,14 +20,6 @@ class TestCase extends Orchestra
     }
 
     #[Override]
-    protected function getPackageProviders($app)
-    {
-        return [
-            LaravelEnvKeysCheckerServiceProvider::class,
-        ];
-    }
-
-    #[Override]
     public function getEnvironmentSetUp($app): void
     {
         config()->set('database.default', 'testing');
@@ -36,5 +28,13 @@ class TestCase extends Orchestra
         $migration = include __DIR__.'/../database/migrations/create_laravel-env-keys-checker_table.php.stub';
         $migration->up();
         */
+    }
+
+    #[Override]
+    protected function getPackageProviders($app)
+    {
+        return [
+            LaravelEnvKeysCheckerServiceProvider::class,
+        ];
     }
 }

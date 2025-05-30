@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
-class EnvInGitIgnoreCommand extends Command
+final class EnvInGitIgnoreCommand extends Command
 {
     use HelperFunctions;
 

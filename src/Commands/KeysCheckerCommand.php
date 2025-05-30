@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\progress;
-use function Laravel\Prompts\table;
-
 use Msamgan\LaravelEnvKeysChecker\Actions\AddKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\CheckKeys;
 use Msamgan\LaravelEnvKeysChecker\Actions\GetKeys;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
-class KeysCheckerCommand extends Command
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\progress;
+use function Laravel\Prompts\table;
+
+final class KeysCheckerCommand extends Command
 {
     use HelperFunctions;
 

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Commands;
 
 use Illuminate\Console\Command;
 use Msamgan\LaravelEnvKeysChecker\Concerns\HelperFunctions;
 
-class EnvKeysSyncCommand extends Command
+final class EnvKeysSyncCommand extends Command
 {
     use HelperFunctions;
 
@@ -118,7 +120,7 @@ class EnvKeysSyncCommand extends Command
     private function moveKeyToLine(string $file, string $key, int $toLine): void
     {
         $lines = file(filename: $file);
-        $keyLine = array_filter(array: $lines, callback: fn ($line): bool => str_starts_with((string) $line, $key));
+        $keyLine = array_filter(array: $lines, callback: fn ($line): bool => str_starts_with($line, $key));
 
         if ($keyLine === []) {
             return;

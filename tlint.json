@@ -1,0 +1,3 @@
+{
+    "disabled": ["QualifiedNamesOnlyForClassName", "RemoveLeadingSlashNamespaces"]
+}

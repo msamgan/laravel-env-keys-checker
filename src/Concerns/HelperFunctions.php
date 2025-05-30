@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Msamgan\LaravelEnvKeysChecker\Concerns;
 
 use function Laravel\Prompts\error;

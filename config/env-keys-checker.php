@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // List of all the .env files to ignore while checking the env keys
     'ignore_files' => explode(',', (string) env('KEYS_CHECKER_IGNORE_FILES', '')),
