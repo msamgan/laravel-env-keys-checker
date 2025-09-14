@@ -11,7 +11,7 @@ final class AddKeys
     public function handle(Collection $missingKeys): void
     {
         $missingKeys->each(function (array $missingKey): void {
-            $filePath = base_path($missingKey['envFile']);
+            $filePath = $missingKey['envFilePath'];
             $envContent = file($filePath);
 
             $lineDiff = count($envContent) - $missingKey['line'];

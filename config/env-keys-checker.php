@@ -21,4 +21,9 @@ return [
 
     // Master .env file to be used for syncing the keys
     'master_env' => env('MASTER_ENV', '.env'),
+
+    // Additional locations to scan for .env files (relative to project root)
+    // Can be paths to specific files or directories to scan
+    // Example: ['storage/envs/', 'custom/.env.production']
+    'additional_env_locations' => explode(',', (string) env('KEYS_CHECKER_ADDITIONAL_LOCATIONS', '')),
 ];
