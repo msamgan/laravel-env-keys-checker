@@ -124,14 +124,4 @@ final class KeysCheckerCommand extends Command
             ])->toArray()
         );
     }
-
-    private function getRelativePath(string $path): string
-    {
-        $basePath = base_path();
-        if (str_starts_with($path, $basePath)) {
-            return mb_substr($path, mb_strlen($basePath) + 1);
-        }
-
-        return basename($path);
-    }
 }

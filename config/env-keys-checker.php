@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 return [
-    // List of all the .env files to ignore while checking the env keys
+    // List of .env files to ignore while checking (relative paths from project root)
+    // Examples: '.env.backup' (root only), 'storage/envs/.env.old' (specific path)
     'ignore_files' => explode(',', (string) env('KEYS_CHECKER_IGNORE_FILES', '')),
 
     // List of all the env keys to ignore while checking the env keys
