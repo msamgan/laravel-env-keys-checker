@@ -48,12 +48,13 @@ final class EnvKeysSyncCommand extends Command
             return self::FAILURE;
         }
 
-        $envFiles = collect(value: $envFiles)->filter(callback: fn ($file): bool => basename(path: (string) $file) !== $this->getMasterEnv());
+        $masterEnvPath = base_path($this->getMasterEnv());
+        $envFiles = collect(value: $envFiles)->filter(callback: fn ($file): bool => $file !== $masterEnvPath);
 
-        $envFiles->each(callback: function ($envFile): void {
-            $totalKeysFromMaster = count(value: file(filename: $this->getMasterEnv()));
+        $envFiles->each(callback: function ($envFile) use ($masterEnvPath): void {
+            $totalKeysFromMaster = count(value: file(filename: $masterEnvPath));
             for ($line = 1; $line <= $totalKeysFromMaster; $line++) {
-                $keyMaster = $this->getKeyFromFileOnLine(file: $this->getMasterEnv(), line: $line);
+                $keyMaster = $this->getKeyFromFileOnLine(file: $masterEnvPath, line: $line);
                 $keyEnvFile = $this->getKeyFromFileOnLine(file: $envFile, line: $line);
 
                 if ($keyMaster === $keyEnvFile) {
