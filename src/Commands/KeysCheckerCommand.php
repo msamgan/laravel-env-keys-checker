@@ -120,7 +120,7 @@ final class KeysCheckerCommand extends Command
             rows: $missingKeys->map(callback: fn ($missingKey): array => [
                 $missingKey['line'],
                 $missingKey['key'],
-                $missingKey['envFile'],
+                $this->getRelativePath($missingKey['envFilePath']),
             ])->toArray()
         );
     }

@@ -26,7 +26,7 @@ final class CheckKeys
                     'line' => $keyData['line'],
                     'key' => $keyData['key'],
                     'is_next_line_empty' => $keyData['is_next_line_empty'],
-                    'envFile' => basename($envFile),
+                    'envFilePath' => $envFile,
                 ]);
             }
         });
