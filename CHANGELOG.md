@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.9.0 - 2025-10-26
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/msamgan/laravel-env-keys-checker/pull/25
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/msamgan/laravel-env-keys-checker/pull/26
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/msamgan/laravel-env-keys-checker/pull/31
+* Add support for additional .env file locations by @alexkart in https://github.com/msamgan/laravel-env-keys-checker/pull/29
+
+### New Contributors
+
+* @alexkart made their first contribution in https://github.com/msamgan/laravel-env-keys-checker/pull/29
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.8.0...v1.9.0
+
 ## v1.8.0 - 2025-05-30
 
 ### What's Changed
