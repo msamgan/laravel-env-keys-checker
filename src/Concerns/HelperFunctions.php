@@ -46,7 +46,7 @@ trait HelperFunctions
             $fullPath = base_path($location);
 
             if (is_dir($fullPath)) {
-                $pattern = rtrim($fullPath, '/') . '/.env*';
+                $pattern = mb_rtrim($fullPath, '/') . '/.env*';
                 $files = glob($pattern);
                 if ($files !== false) {
                     $envFiles = array_merge($envFiles, $files);
