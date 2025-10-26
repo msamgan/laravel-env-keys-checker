@@ -21,11 +21,51 @@ trait HelperFunctions
 
     private function getEnvs(): array
     {
-        return glob(pattern: base_path(path: '.env*'));
+        $envFiles = glob(pattern: base_path(path: '.env*'));
+
+        $additionalLocations = $this->getAdditionalEnvLocations();
+
+        return array_merge($envFiles, $additionalLocations);
     }
 
     private function getFilesToIgnore(): array
     {
         return (array) config(key: 'env-keys-checker.ignore_files', default: []);
+    }
+
+    private function getAdditionalEnvLocations(): array
+    {
+        $locations = (array) config(key: 'env-keys-checker.additional_env_locations', default: []);
+        $envFiles = [];
+
+        foreach ($locations as $location) {
+            if (empty($location)) {
+                continue;
+            }
+
+            $fullPath = base_path($location);
+
+            if (is_dir($fullPath)) {
+                $pattern = mb_rtrim($fullPath, '/') . '/.env*';
+                $files = glob($pattern);
+                if ($files !== false) {
+                    $envFiles = array_merge($envFiles, $files);
+                }
+            } elseif (is_file($fullPath)) {
+                $envFiles[] = $fullPath;
+            }
+        }
+
+        return array_unique($envFiles);
+    }
+
+    private function getRelativePath(string $path): string
+    {
+        $basePath = base_path();
+        if (str_starts_with($path, $basePath)) {
+            return mb_substr($path, mb_strlen($basePath) + 1);
+        }
+
+        return basename($path);
     }
 }

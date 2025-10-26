@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 return [
-    // List of all the .env files to ignore while checking the env keys
+    // List of .env files to ignore while checking (relative paths from project root)
+    // Examples: '.env.backup' (root only), 'storage/envs/.env.old' (specific path)
     'ignore_files' => explode(',', (string) env('KEYS_CHECKER_IGNORE_FILES', '')),
 
     // List of all the env keys to ignore while checking the env keys
@@ -21,4 +22,9 @@ return [
 
     // Master .env file to be used for syncing the keys
     'master_env' => env('MASTER_ENV', '.env'),
+
+    // Additional locations to scan for .env files (relative to project root)
+    // Can be paths to specific files or directories to scan
+    // Example: ['storage/envs/', 'custom/.env.production']
+    'additional_env_locations' => explode(',', (string) env('KEYS_CHECKER_ADDITIONAL_LOCATIONS', '')),
 ];
