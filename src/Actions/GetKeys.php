@@ -18,13 +18,14 @@ final class GetKeys
 
         return $files
             ->map(function ($file) use ($ignoredKeys, $withComments) {
-                $collection = collect(file($file))->map(function ($line, $index) use ($file): array {
+                $lines = file($file) ?: [];
+                $collection = collect($lines)->map(function ($line, $index) use ($lines): array {
                     [$key] = explode('=', $line);
 
                     return [
                         'key' => $key,
                         'line' => $index + 1,
-                        'is_next_line_empty' => isset(file($file)[$index + 1]) && file($file)[$index + 1] === "\n",
+                        'is_next_line_empty' => isset($lines[$index + 1]) && $lines[$index + 1] === "\n",
                     ];
                 });
 
