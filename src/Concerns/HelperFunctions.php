@@ -21,7 +21,7 @@ trait HelperFunctions
 
     private function getEnvs(): array
     {
-        $envFiles = glob(pattern: base_path(path: '.env*'));
+        $envFiles = glob(pattern: base_path(path: '.env*')) ?: [];
 
         $additionalLocations = $this->getAdditionalEnvLocations();
 
@@ -46,11 +46,9 @@ trait HelperFunctions
             $fullPath = base_path($location);
 
             if (is_dir($fullPath)) {
-                $pattern = mb_rtrim($fullPath, '/') . '/.env*';
-                $files = glob($pattern);
-                if ($files !== false) {
-                    $envFiles = array_merge($envFiles, $files);
-                }
+                $pattern = mb_rtrim($fullPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.env*';
+                $files = glob($pattern) ?: [];
+                $envFiles = array_merge($envFiles, $files);
             } elseif (is_file($fullPath)) {
                 $envFiles[] = $fullPath;
             }
@@ -62,7 +60,7 @@ trait HelperFunctions
     private function getRelativePath(string $path): string
     {
         $basePath = base_path();
-        if (str_starts_with($path, $basePath)) {
+        if ($basePath !== '' && str_starts_with($path, $basePath)) {
             return mb_substr($path, mb_strlen($basePath) + 1);
         }
 
