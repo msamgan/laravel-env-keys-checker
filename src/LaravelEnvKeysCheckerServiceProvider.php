@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Msamgan\LaravelEnvKeysChecker;
 
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Msamgan\LaravelEnvKeysChecker\Commands\EnvInGitIgnoreCommand;
 use Msamgan\LaravelEnvKeysChecker\Commands\EnvKeysSyncCommand;
 use Msamgan\LaravelEnvKeysChecker\Commands\KeysCheckerCommand;
@@ -26,6 +27,18 @@ final class LaravelEnvKeysCheckerServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommand(KeysCheckerCommand::class)
             ->hasCommand(EnvInGitIgnoreCommand::class)
-            ->hasCommand(EnvKeysSyncCommand::class);
+            ->hasCommand(EnvKeysSyncCommand::class)
+            ->hasInstallCommand(function (InstallCommand $command): void {
+                $repo = 'msamgan/laravel-env-keys-checker';
+                $url = 'https://github.com/' . $repo;
+
+                $command
+                    ->startWith(function (InstallCommand $command) use ($url): void {
+                        $command->info('Thanks for installing Laravel Env Keys Checker!');
+                        $command->info('Repository: ' . $url);
+                    })
+                    ->publishConfigFile()
+                    ->askToStarRepoOnGitHub($repo);
+            });
     }
 }
