@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v1.9.1 - 2025-12-17
+
+### What's Changed
+
+* Bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/msamgan/laravel-env-keys-checker/pull/32
+* Update PHP version requirement to support 8.2 and above by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/33
+* Refactor file handling and improve array operations for environment by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/34
+* Add install command with repository information to LaravelEnvKeysChecker by @msamgan in https://github.com/msamgan/laravel-env-keys-checker/pull/35
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.9.0...v1.9.1
+
 ## v1.9.0 - 2025-10-26
 
 ### What's Changed
