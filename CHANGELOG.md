@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-env-keys-checker` will be documented in this file.
 
+## v2.0.0 - 2026-04-21
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/msamgan/laravel-env-keys-checker/pull/36
+* Laravel 13.x Compatibility by @laravel-shift in https://github.com/msamgan/laravel-env-keys-checker/pull/37
+
+### New Contributors
+
+* @laravel-shift made their first contribution in https://github.com/msamgan/laravel-env-keys-checker/pull/37
+
+**Full Changelog**: https://github.com/msamgan/laravel-env-keys-checker/compare/v1.9.1...v2.0.0
+
 ## v1.9.1 - 2025-12-17
 
 ### What's Changed
